@@ -1,26 +1,58 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0a0f1e;
+  color: white;
+  overflow-x: hidden;
+  font-family: 'Orbitron', sans-serif;
+}
+.glow-text {
+  text-shadow:
+    0 0 6px rgba(0, 255, 255, 0.7),
+    0 0 12px rgba(0, 255, 255, 0.5),
+    0 0 20px rgba(0, 255, 255, 0.3);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.9;
+    text-shadow:
+      0 0 6px rgba(0, 255, 255, 0.6),
+      0 0 12px rgba(0, 255, 255, 0.4),
+      0 0 20px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    opacity: 1;
+    text-shadow:
+      0 0 8px rgba(0, 255, 255, 0.9),
+      0 0 18px rgba(0, 255, 255, 0.6),
+      0 0 28px rgba(0, 255, 255, 0.4);
+  }
+}
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.animate-scanline {
+  animation: scanline 8s linear infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+.glass-morphism {
+  background: rgba(6, 18, 30, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 255, 255, 0.1);
 }

@@ -1,65 +1,83 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import GalaxyBackground from "./components/GalaxyBackground";
+import GradientOverlay from "./components/GradientOverlay";
+import StarField from "./components/StarField";
+import IntroScreen from "./components/IntroScreen";
+import HUD from "./components/HUD";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
+  const [introDone, setIntroDone] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="relative w-screen h-screen flex items-center justify-center overflow-hidden">
+      <AnimatePresence mode="wait">
+        {/* --- Intro --- */}
+        {!introDone ? (
+          <IntroScreen key="intro" onFinish={() => setIntroDone(true)} />
+        ) : (
+          /* --- Contenu principal --- */
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="relative w-full h-full flex items-center justify-center"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <HUD activeCategory={activeCategory} onSetCategory={setActiveCategory} />
+            <div className="absolute inset-0 z-0">
+              <GalaxyBackground />
+            </div>
+
+            <GradientOverlay />
+
+            {/* Texte principal */}
+            <div className="absolute top-10 text-center text-cyan-300 z-10 flex flex-col items-center">
+              <div className="flex items-center gap-3 mb-2">
+                <motion.svg
+                  width="36"
+                  height="36"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  className="text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.8)]"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  <path d="M12 3a9 9 0 1 0 9 9 9 9 0 0 0-9-9Zm0 14a5 5 0 1 1 5-5 5 5 0 0 1-5 5Z" strokeLinecap="round" />
+                  <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                  <path d="M12 7v1M12 16v1M7 12h1M16 12h1" strokeLinecap="round" />
+                </motion.svg>
+                <h1 className="text-4xl font-orbitron tracking-tighter uppercase">Cosmic Data</h1>
+              </div>
+              <p className="text-[10px] text-cyan-500/60 uppercase tracking-[0.3em]">
+                {activeCategory ? `Exploring Sector: ${activeCategory}` : "Protocol: Global Knowledge Discovery"}
+              </p>
+            </div>
+
+            <StarField activeCategory={activeCategory} />
+
+            {/* --- Signature / Légende façon terminal --- */}
+            <div className="absolute bottom-4 left-6 text-xs text-cyan-400/70 font-orbitron tracking-widest z-20 select-none pointer-events-none flex items-center">
+              <span className="opacity-80">crafted by&nbsp;</span>
+              <span className="glow-text text-cyan-300">mathis rivière</span>
+              <span className="opacity-50">&nbsp;· cosmic data 2025</span>
+
+              {/* Curseur qui clignote */}
+              <motion.span
+                className="ml-1 text-cyan-300 opacity-80"
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                _
+              </motion.span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </main>
   );
 }
