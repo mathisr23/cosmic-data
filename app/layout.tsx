@@ -1,5 +1,6 @@
 // 📄 app/layout.tsx
 import "./globals.css";
+import { ReactNode } from "react";
 import { Orbitron } from "next/font/google";
 
 const orbitron = Orbitron({
@@ -13,7 +14,7 @@ export const metadata = {
   description: "An interactive galaxy of hidden knowledge",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
       <body className={`${orbitron.variable} font-orbitron bg-black text-white`}>
